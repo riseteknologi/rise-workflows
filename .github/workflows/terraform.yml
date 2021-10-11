@@ -1,11 +1,11 @@
 name: Terraform Jobs for plan and apply
 on:
-  inputs:
-    terraform_version:
-      description: Terraform version you want to use
-      required: true
-      type: string
   workflow_call:
+    inputs:
+      terraform_version:
+        description: Terraform version you want to use
+        required: true
+        type: string
     secrets:
       TF_API_TOKEN:
         required: true
