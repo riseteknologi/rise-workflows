@@ -23,7 +23,6 @@ jobs:
           terraform_version: ${{ inputs.terraform_versionname }}
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check
@@ -31,8 +30,6 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init
-        env:
-          HOME: /opt/ansible
       
       - name: Terraform Validate
         id: validate
