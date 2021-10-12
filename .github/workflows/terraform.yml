@@ -14,9 +14,6 @@ jobs:
     name: "Terraform"
     runs-on: self-hosted
     steps:
-      - name: Install Prerequisites tasks for terraform download
-        run: sudo apt -y install unzip
-
       - name: Checkout
         uses: actions/checkout@v2
 
