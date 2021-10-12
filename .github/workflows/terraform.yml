@@ -32,7 +32,7 @@ jobs:
         id: init
         run: terraform init
         env:
-          HOME=/opt/ansible
+          HOME: /opt/ansible
       
       - name: Terraform Validate
         id: validate
