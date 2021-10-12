@@ -22,7 +22,8 @@ jobs:
         with:
           terraform_version: ${{ inputs.terraform_versionname }}
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
+      - name: echo home
+        run: echo $HOME
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check
