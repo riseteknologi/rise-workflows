@@ -55,6 +55,10 @@ jobs:
           java-version: "11"
           distribution: "adopt"
           cache: maven
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v4.2
+        with:
+          maven-version: 3.8.2
       - run: mvn --batch-mode --update-snapshots verify
         shell: bash
       - run: mkdir ${{ inputs.app-name }} && cp target/*.jar ${{ inputs.app-name }}/${{ inputs.app-name }}-v${{ inputs.app-version }}.jar
