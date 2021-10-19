@@ -37,10 +37,14 @@ on:
       host:
         type: string
         required: true
+     
+    secrets:
       username:
         type: string
         required: true
-    secrets:
+      private-key:
+        type: string
+        required: true
       gcloud-key:
         required: true
 
@@ -89,7 +93,7 @@ jobs:
           service_account_key: ${{ secrets.gcloud-key }}
           export_default_credentials: true
       - name: Login and configure gcloud for docker
-        run: gcloud auth configure-docker
+        run: gcloud --quiet auth configure-docker
         shell: bash
       - name: Build Docker Image
         run: |
@@ -99,8 +103,10 @@ jobs:
       - uses: appleboy/ssh-action@master
         with:
           host: ${{ inputs.HOST }}
-          username: ${{ inputs.USERNAME }}
+          username: ${{ secrets.username }}
+          key: ${{ secrets.private-key }}
           script: |
+            gcloud --quiet auth configure-docker
             docker run \
             --volume-driver=nfs \
             -v ${{ inputs.nfs-server-path }}:${{ inputs.nfs-mount-path }}\
