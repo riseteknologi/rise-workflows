@@ -37,14 +37,11 @@ on:
       host:
         type: string
         required: true
-     
-    secrets:
       username:
         type: string
         required: true
-      private-key:
-        type: string
-        required: true
+     
+    secrets:
       gcloud-key:
         required: true
 
@@ -103,7 +100,7 @@ jobs:
       - uses: appleboy/ssh-action@master
         with:
           host: ${{ inputs.HOST }}
-          username: ${{ secrets.username }}
+          username: ${{ inputs.username }}
           key_path: /opt/ansible/.ssh/id_rsa
           script: |
             gcloud --quiet auth configure-docker
