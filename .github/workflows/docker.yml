@@ -55,7 +55,7 @@ jobs:
           java-version: "11"
           distribution: "adopt"
           cache: maven
-      - run: mvn --batch-mode --update-snapshots compile
+      - run: mvn --batch-mode --update-snapshots verify
         shell: bash
       - run: mkdir ${{ inputs.app-name }} && cp target/*.jar ${{ inputs.app-name }}/${{ inputs.app-name }}-v${{ inputs.app-version }}.jar
         shell: bash
