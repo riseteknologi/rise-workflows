@@ -42,6 +42,8 @@ on:
         required: true
      
     secrets:
+      ansible-private-key:
+        required: true
       gcloud-key:
         required: true
 
@@ -101,7 +103,7 @@ jobs:
         with:
           host: ${{ inputs.HOST }}
           username: ansible
-          key: ${{ secrets.ANSIBLE_PRIVATE_KEY }}
+          key: ${{ secrets.ansible-private-key }}
           script: |
             gcloud --quiet auth configure-docker
             docker run \
