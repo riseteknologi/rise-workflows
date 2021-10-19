@@ -104,7 +104,7 @@ jobs:
         with:
           host: ${{ inputs.HOST }}
           username: ${{ secrets.username }}
-          key: ${{ secrets.private-key }}
+          key_path: /opt/ansible/.ssh/id_rsa
           script: |
             gcloud --quiet auth configure-docker
             docker run \
