@@ -72,7 +72,7 @@ jobs:
           RUN mkdir -p /app/config ${{inputs.nfs-mount-path}}
           COPY ${{ inputs.app-name }}/${{ inputs.app-name }}-v${{ inputs.app-version }}.jar /app
           COPY properties/application.properties /app/config
-          RUN chown -R 3002. /app
+          RUN chown -R 3002:3002 /app
           USER 3002
           EXPOSE 8080 
           ENTRYPOINT ["java","-server","-Xms${{inputs.xms}}", "-Xmx${{inputs.xmx}}","-jar","/app/${{ inputs.app-name }}-v${{ inputs.app-version }}.jar","-Dspring.config.location=/app/config/application.properties"]" > Dockerfile
@@ -82,11 +82,15 @@ jobs:
         shell: bash
       
       # Push to GCR
-      - name: Login to gcloud registry
-        id: gcloud
-        uses: elgohr/gcloud-login-action@master
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
         with:
-          account_key: ${{ secrets.gcloud-key }}
+          project_id: rise-prod-327008
+          service_account_key: ${{ secrets.gcloud-key }}
+          export_default_credentials: true
+      - name: Login and configure gcloud for docker
+        run: gcloud auth configure-docker
+        shell: bash
       - name: Build Docker Image
         run: |
           docker build -t asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }} . \
