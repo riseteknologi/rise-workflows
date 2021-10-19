@@ -100,8 +100,8 @@ jobs:
       - uses: appleboy/ssh-action@master
         with:
           host: ${{ inputs.HOST }}
-          username: ${{ inputs.username }}
-          key_path: /opt/ansible/.ssh/id_rsa
+          username: ansible
+          key: ${{ secrets.ANSIBLE_PRIVATE_KEY }}
           script: |
             gcloud --quiet auth configure-docker
             docker run \
