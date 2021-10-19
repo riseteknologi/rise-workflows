@@ -71,14 +71,16 @@ jobs:
           name: Package
           path: ${{ inputs.app-name }}
       - run: |
-          echo "FROM openjdk:11-jre-slim 
+          cat << EOF > Dockerfile 
+          FROM openjdk:11-jre-slim 
           RUN mkdir -p /app/config ${{inputs.nfs-mount-path}}
           COPY ${{ inputs.app-name }}/${{ inputs.app-name }}-v${{ inputs.app-version }}.jar /app
           COPY properties/application.properties /app/config
           RUN chown -R 3002:3002 /app
           USER 3002
           EXPOSE 8080 
-          ENTRYPOINT ["java","-server","-Xms${{inputs.xms}}", "-Xmx${{inputs.xmx}}","-jar","/app/${{ inputs.app-name }}-v${{ inputs.app-version }}.jar","-Dspring.config.location=/app/config/application.properties"]" > Dockerfile
+          ENTRYPOINT ["java","-server","-Xms${{inputs.xms}}", "-Xmx${{inputs.xmx}}","-jar","/app/${{ inputs.app-name }}-v${{ inputs.app-version }}.jar","-Dspring.config.location=/app/config/application.properties"]
+          EOF
         shell: bash
       - run: |
           cat Dockerfile
