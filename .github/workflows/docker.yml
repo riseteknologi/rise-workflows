@@ -106,4 +106,4 @@ jobs:
           key: ${{ secrets.ansible-private-key }}
           script: |
             gcloud --quiet auth configure-docker
-            docker run --volume-driver=nfs -v ${{ inputs.nfs-server-path }}:${{ inputs.nfs-mount-path }} asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }}
+            docker run -v ${{ inputs.nfs-server-path }}:${{ inputs.nfs-mount-path }} asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }}
