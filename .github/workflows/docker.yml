@@ -87,15 +87,11 @@ jobs:
         uses: elgohr/gcloud-login-action@master
         with:
           account_key: ${{ secrets.gcloud-key }}
-      - name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@master
-        with:
-          name: ${{ inputs.app-name }}
-          username: ${{ steps.gcloud.outputs.username }}
-          password: ${{ steps.gcloud.outputs.password }}
-          dockerfile: /opt/runner_workspace/${{inputs.app-name }}/${{inputs.app-name }}/Dockerfile
-          tags: ${{ inputs.app-version }}
-          registry: asia.gcr.io/rise-prod-327008
+      - name: Build Docker Image
+        run: |
+          docker build -t asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }} . \
+          && docker push asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }}
+        shell: bash
       - uses: appleboy/ssh-action@master
         with:
           host: ${{ inputs.HOST }}
