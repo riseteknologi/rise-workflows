@@ -37,9 +37,6 @@ on:
       host:
         type: string
         required: true
-      username:
-        type: string
-        required: true
       container_port:
         type: string
         required: true
