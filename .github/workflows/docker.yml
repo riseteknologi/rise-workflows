@@ -40,6 +40,12 @@ on:
       username:
         type: string
         required: true
+      container_port:
+        type: string
+        required: true
+      container_node_port:
+        type: string
+        required: true
      
     secrets:
       ansible-private-key:
@@ -108,4 +114,4 @@ jobs:
           key: ${{ secrets.ansible-private-key }}
           script: |
             gcloud --quiet auth configure-docker
-            docker run -v ${{ inputs.nfs-server-path }}:${{ inputs.nfs-mount-path }} asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }}
+            docker run -v ${{ inputs.nfs-server-path }}:${{ inputs.nfs-mount-path }} -d -p "${{ inputs.container_node_port }}:${{ inputs.container_port }}" --name ${{ inputs.app-name }} asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }}
