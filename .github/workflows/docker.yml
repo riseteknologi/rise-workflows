@@ -96,6 +96,7 @@ jobs:
           dockerfile: Dockerfile
           tags: ${{ inputs.app-version }}
           registry: asia.gcr.io/rise-prod-327008
+          workdir: /opt/runner_workspace/${{inputs.app-name }}/${{inputs.app-name }}
       - uses: appleboy/ssh-action@master
         with:
           host: ${{ inputs.HOST }}
