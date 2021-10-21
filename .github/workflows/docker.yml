@@ -24,14 +24,8 @@ on:
         description: 'nfs mount path for app'
         type: string
         required: true
-      xms:
-        description: 'java xms'
-        type: string
-        default: "128m"
-        required: true
-      xmx:
-        description: 'java xmx'
-        default: "256m"
+      java-param:
+        description: 'java application param'
         type: string
         required: true
       host:
@@ -75,14 +69,10 @@ jobs:
           path: ${{ inputs.app-name }}
       - run: |
           cat << EOF > Dockerfile 
-          FROM openjdk:11-jre-slim 
-          RUN mkdir -p /app/config ${{inputs.nfs-mount-path}}
+          FROM asia.gcr.io/rise-prod-327008/base/rise-java-11:v.0.0.1
           COPY ${{ inputs.app-name }}/${{ inputs.app-name }}-v${{ inputs.app-version }}.jar /app
           COPY properties/application.properties /app/config
-          RUN chown -R 3002:3002 /app
-          USER 3002
-          EXPOSE 8080 
-          ENTRYPOINT ["java","-server","-Xms${{inputs.xms}}", "-Xmx${{inputs.xmx}}","-jar","/app/${{ inputs.app-name }}-v${{ inputs.app-version }}.jar","-Dspring.config.location=/app/config/application.properties"]
+          ENV APPLICATION_PARAM="${{inputs.java-param}}"
           EOF
         shell: bash
       - run: |
