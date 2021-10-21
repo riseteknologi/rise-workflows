@@ -65,11 +65,11 @@ jobs:
         shell: bash
       - uses: actions/upload-artifact@v2
         with:
-          name: Package
+          name: ${{ inputs.app-name }}-${{ inputs.app-version}}.zip
           path: ${{ inputs.app-name }}
       - run: |
           cat << EOF > Dockerfile 
-          FROM asia.gcr.io/rise-prod-327008/base/rise-java-11:v.0.0.1
+          FROM asia.gcr.io/rise-prod-327008/base/rise-java-11:v0.0.1
           COPY ${{ inputs.app-name }}/${{ inputs.app-name }}-v${{ inputs.app-version }}.jar /app
           COPY properties/application.properties /app/config
           ENV APPLICATION_PARAM="${{inputs.java-param}}"
