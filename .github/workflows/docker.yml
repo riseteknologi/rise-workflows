@@ -70,7 +70,7 @@ jobs:
       - run: |
           cat << EOF > Dockerfile 
           FROM asia.gcr.io/rise-prod-327008/base/rise-java-11:v0.0.1
-          COPY ${{ inputs.app-name }}/${{ inputs.app-name }}-v${{ inputs.app-version }}.jar /app
+          COPY ${{ inputs.app-name }}/${{ inputs.app-name }}-v${{ inputs.app-version }}.jar /app/app.jar
           COPY properties/application.properties /app/config
           ENV APPLICATION_PARAM="${{inputs.java-param}}"
           EOF
