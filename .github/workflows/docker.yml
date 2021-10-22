@@ -91,6 +91,7 @@ jobs:
         shell: bash
       - name: Build Docker Image
         run: |
+          docker pull asia.gcr.io/rise-prod-327008/base/rise-java-11:v0.0.1
           docker build -t asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }} . \
           && docker push asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }}
         shell: bash
