@@ -72,7 +72,7 @@ jobs:
           FROM asia.gcr.io/rise-prod-327008/base/rise-java-11:v0.0.1
           COPY ${{ inputs.app-name }}/${{ inputs.app-name }}-v${{ inputs.app-version }}.jar /app/app.jar
           COPY properties/application.properties /app/config
-          ENV APPLICATION_PARAM="${{inputs.java-param}}"
+          ENV JAVA_OPTIONS="${{inputs.java-param}}"
           EOF
         shell: bash
       - run: |
@@ -101,4 +101,5 @@ jobs:
           key: ${{ secrets.ansible-private-key }}
           script: |
             gcloud --quiet auth configure-docker
-            docker run -v ${{ inputs.nfs-server-path }}:${{ inputs.nfs-mount-path }} -d -p "${{ inputs.container_node_port }}:${{ inputs.container_port }}" --name ${{ inputs.app-name }} asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }}
+            docker pull asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }}
+            docker run -v ${{ inputs.nfs-server-path }}:${{ inputs.nfs-mount-path }} -d -p "38080:38080" -p "${{ inputs.container_node_port }}:${{ inputs.container_port }}" --name ${{ inputs.app-name }} asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }}
