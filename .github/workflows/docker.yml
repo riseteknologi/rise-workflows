@@ -102,4 +102,6 @@ jobs:
           script: |
             gcloud --quiet auth configure-docker
             docker pull asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }}
+            docker stop ${{ inputs.app-name }}
+            docker rm ${{ inputs.app-name }}
             docker run -v ${{ inputs.nfs-server-path }}:${{ inputs.nfs-mount-path }} -d -p "38080:38080" -p "${{ inputs.container_node_port }}:${{ inputs.container_port }}" --name ${{ inputs.app-name }} asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }}
