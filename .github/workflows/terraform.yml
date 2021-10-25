@@ -54,13 +54,11 @@ jobs:
             #### Terraform Initialization ⚙️ \`${{ steps.init.outcome }}\`
             #### Terraform Validation 🤖 \`${{ steps.validate.outcome }}\`
             #### Terraform Plan 📖 \`${{ steps.plan.outcome }}\`
-            *Pusher: @${{ github.actor }}, Action: \'${{ github.event_name }}\'*
-            <details><summary>Show Plan</summary>
-            
+            <details><summary>Show Plan</summary>  
             ${CODE}
             ${process.env.PLAN}
             ${CODE}
-            
+            *Pusher: @${{ github.actor }}, Action: \'${{ github.event_name }}\'*
             </details>
             github.rest.issues.createComment({
               issue_number: context.issue.number,
