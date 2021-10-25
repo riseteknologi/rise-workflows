@@ -44,7 +44,7 @@ jobs:
       - uses: actions/github-script@v5
         if: github.event_name == 'pull_request'
         env:
-          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+          PLAN: "${{ steps.plan.outputs.stdout }}"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -55,7 +55,7 @@ jobs:
             #### Terraform Plan 📖 \`${{ steps.plan.outcome }}\`
             <details><summary>Show Plan</summary>
 
-            \`\`\`
+            \`\`\`terraform\n
             ${process.env.PLAN}
             \`\`\`
 
