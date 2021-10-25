@@ -56,9 +56,9 @@ jobs:
             *Pusher: @${{ github.actor }}, Action: \'${{ github.event_name }}\'*
             <details>
             <summary>Show Plan</summary>
-            ```\n
+            \`\`\`hcl\n
             ${process.env.PLAN}
-            ```
+            \`\`\`
             </details>
             `;
             github.rest.issues.createComment({
