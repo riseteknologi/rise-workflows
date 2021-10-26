@@ -53,7 +53,7 @@ jobs:
       - uses: guaychou/ebisu-action@main
         with:
           service-name: ${{ inputs.app-name }}
-          message: "Deployment version ${{ inputs.app-version }} on going bro, started by ${{ github.actor }}"
+          message: "Deployment started by ${{ github.actor }}"
           address: "http://ebisu.rise-jkt.cld:8080"
       - uses: actions/setup-java@v2
         with:
@@ -123,7 +123,7 @@ jobs:
         uses: guaychou/ebisu-action@main
         with:
           service-name: ${{ inputs.app-name }}
-          message: "Deployment failed version ${{ inputs.app-version }}, stupid ${{ github.actor }}"
+          message: "Deployment failed stupid ${{ github.actor }} baka mitai"
           address: "http://ebisu.rise-jkt.cld:8080"
       - name: Exit if failure
         if: ${{ failure() }}
@@ -132,5 +132,5 @@ jobs:
         uses: guaychou/ebisu-action@main
         with:
           service-name: ${{ inputs.app-name }}
-          message: "Deployment success in version ${{ inputs.app-version }}, thank you ${{ github.actor }}"
+          message: "Deployment success thank you ${{ github.actor }}"
           address: "http://ebisu.rise-jkt.cld:8080"
