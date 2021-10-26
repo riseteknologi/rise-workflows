@@ -116,3 +116,19 @@ jobs:
             docker stop ${{ inputs.app-name }}
             docker rm ${{ inputs.app-name }}
             docker run -v ${{ inputs.nfs-server-path }}:${{ inputs.nfs-mount-path }} -d -p "38080:38080" -p "${{ inputs.container_node_port }}:${{ inputs.container_port }}" --name ${{ inputs.app-name }} asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }}
+      - name: Ebisu Failed Hook
+        if: ${{ failure() }}
+        uses: guaychou/ebisu-action@main
+        with:
+          service-name: ${{ inputs.app-name }}
+          message: "Deployment Failed, BAKA MITAII!"
+          address: "http://ebisu.rise-jkt.cld:8080"
+      - name: Exit if failure
+        if: ${{ failure() }}
+        run: exit 1
+      - name: Ebisu Success Hook
+        uses: guaychou/ebisu-action@main
+        with:
+          service-name: ${{ inputs.app-name }}
+          message: "Deployment success"
+          address: "http://ebisu.rise-jkt.cld:8080"
