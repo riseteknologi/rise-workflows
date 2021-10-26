@@ -53,7 +53,7 @@ jobs:
       - uses: guaychou/ebisu-action@main
         with:
           service-name: ${{ inputs.app-name }}
-          message: "Deployment on going bro"
+          message: "Deployment version ${{ inputs.app-version }} on going bro, started by ${{ github.actor }}"
           address: "http://ebisu.rise-jkt.cld:8080"
       - uses: actions/setup-java@v2
         with:
@@ -104,6 +104,7 @@ jobs:
           docker build -t asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }} . \
           && docker push asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }}
         shell: bash
+      # Deploy the container
       - name: Deploy the new application - ${{ inputs.app-name }}:${{ inputs.app-version }}
         uses: appleboy/ssh-action@master
         with:
@@ -116,12 +117,13 @@ jobs:
             docker stop ${{ inputs.app-name }}
             docker rm ${{ inputs.app-name }}
             docker run -v ${{ inputs.nfs-server-path }}:${{ inputs.nfs-mount-path }} -d -p "38080:38080" -p "${{ inputs.container_node_port }}:${{ inputs.container_port }}" --name ${{ inputs.app-name }} asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }}
+      # Ebisu hook
       - name: Ebisu Failed Hook
         if: ${{ failure() }}
         uses: guaychou/ebisu-action@main
         with:
           service-name: ${{ inputs.app-name }}
-          message: "Deployment Failed, BAKA MITAII!"
+          message: "Deployment failed version ${{ inputs.app-version }}, stupid ${{ github.actor }}"
           address: "http://ebisu.rise-jkt.cld:8080"
       - name: Exit if failure
         if: ${{ failure() }}
@@ -130,5 +132,5 @@ jobs:
         uses: guaychou/ebisu-action@main
         with:
           service-name: ${{ inputs.app-name }}
-          message: "Deployment success"
+          message: "Deployment success in version ${{ inputs.app-version }}, thank you ${{ github.actor }}"
           address: "http://ebisu.rise-jkt.cld:8080"
