@@ -50,6 +50,11 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
+      - uses: guaychou/ebisu-action@main
+        with:
+          service-name: ${{ inputs.app-name }}
+          message: "Deployment on going bro"
+          address: "http://ebisu.rise-jkt.cld"
       - uses: actions/setup-java@v2
         with:
           java-version: ${{ inputs.java-version }}
