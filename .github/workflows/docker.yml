@@ -16,12 +16,8 @@ on:
         description: 'apps version'
         type: string
         required: true
-      nfs-server-path:
+      nfs-volume-mounts:
         description: 'nfs path for app'
-        type: string
-        required: true
-      nfs-mount-path:
-        description: 'nfs mount path for app'
         type: string
         required: true
       java-param:
@@ -104,19 +100,13 @@ jobs:
           docker build -t asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }} . \
           && docker push asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }}
         shell: bash
-      # Deploy the container
-      - name: Deploy the new application - ${{ inputs.app-name }}:${{ inputs.app-version }}
-        uses: appleboy/ssh-action@master
+      - name: Checkout tools repo
+        uses: actions/checkout@v2
         with:
-          host: ${{ inputs.HOST }}
-          username: ansible
-          key: ${{ secrets.ansible-private-key }}
-          script: |
-            gcloud --quiet auth configure-docker
-            docker pull asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }}
-            docker stop ${{ inputs.app-name }}
-            docker rm ${{ inputs.app-name }}
-            docker run -v ${{ inputs.nfs-server-path }}:${{ inputs.nfs-mount-path }} -d -p "38080:38080" -p "${{ inputs.container_node_port }}:${{ inputs.container_port }}" --name ${{ inputs.app-name }} asia.gcr.io/rise-prod-327008/${{ inputs.app-name }}:${{ inputs.app-version }}
+          repository: saskaradit/rise-asobiba
+          path: ./
+      - run: ansible-playbook asobiba.yml --extra-vars '{"node_port"=${{ inputs.container_node_port }}, "container_port"=${{ inputs.container_port }}, "image_name"=${{ inputs.app-name }}, "image_tag"=${{ inputs.app-version }}, "mount_volume"=${{ inputs.nfs-volume-mounts }} }'
+        shell: bash
       # Ebisu hook
       - name: Ebisu Failed Hook
         if: ${{ failure() }}
