@@ -1,0 +1,75 @@
+name: "Build Java Application Dockerless"
+on:
+  workflow_call:
+    inputs:
+      java-version:  
+        description: 'java version'
+        type: string
+        default: '11'
+        required: false
+      app-version:
+        description: 'apps version'
+        type: string
+        required: true
+        default: '1'
+      app-name:
+        description: 'apps version'
+        type: string
+        required: true
+      java-param:
+        description: 'apps version'
+        type: string
+        required: true
+    secrets:
+      ansible-private-key:
+        required: true
+jobs:
+  build_job:
+    name: Build java
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v2
+      - uses: guaychou/ebisu-action@main
+        with:
+          service-name: ${{ inputs.app-name }}
+          message: "Deployment started by ${{ github.actor }}"
+          address: "http://ebisu.rise-jkt.cld:8080"
+      - uses: actions/setup-java@v2
+        with:
+          java-version: "11"
+          distribution: "adopt"
+          cache: maven
+      - run: mvn --batch-mode --update-snapshots verify
+        shell: bash
+      - run: mkdir ${{ inputs.app-name }} && cp target/*.jar ${{ inputs.app-name }}/${{ inputs.app-name }}-v${{ inputs.app-version }}.jar
+        shell: bash
+      - run: echo ${{ inputs.app-name }}-v${{ inputs.app-version }}
+        shell: bash
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Package
+          path: ${{ inputs.app-name }}
+      - name: Checkout tools repo
+        uses: actions/checkout@v2
+        with:
+          repository: saskaradit/rise-asobiba
+          path: ./
+      - run: ansible-playbook deploy-systemd.yml -i inventory.ini -e '{"app-name":${{ inputs.app-name }}, "app-version":${{ inputs.app-version }}, "java-param":${{inputs.java-param}} }'
+        shell: bash
+      # Ebisu hook
+      - name: Ebisu Failed Hook
+        if: ${{ failure() }}
+        uses: guaychou/ebisu-action@main
+        with:
+          service-name: ${{ inputs.app-name }}
+          message: "Deployment failed stupid ${{ github.actor }} baka mitai"
+          address: "http://ebisu.rise-jkt.cld:8080"
+      - name: Exit if failure
+        if: ${{ failure() }}
+        run: exit 1
+      - name: Ebisu Success Hook
+        uses: guaychou/ebisu-action@main
+        with:
+          service-name: ${{ inputs.app-name }}
+          message: "Deployment success thank you ${{ github.actor }}"
+          address: "http://ebisu.rise-jkt.cld:8080"
