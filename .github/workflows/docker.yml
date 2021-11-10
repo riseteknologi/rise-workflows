@@ -68,8 +68,8 @@ jobs:
         shell: bash
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ inputs.app-name }}-${{ inputs.app-version}}
-          path: ${{ inputs.app-name }}
+          name: ${{ inputs.app-name }}-v${{ inputs.app-version}}
+          path: ${{ inputs.app-name }}/${{ inputs.app-name }}-v${{ inputs.app-version }}.jar
       - name: Generate the Dockerfile from source too image
         run: |
           cat << EOF > Dockerfile 
